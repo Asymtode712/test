@@ -1,0 +1,51 @@
+name: Automate Invitation
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  create_issue_and_invite:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if Label is 'invite me to the community'
+        id: check_label
+        run: |
+          if [[ "${{ github.event.label.name }}" != "invite me to the community" ]]; then
+            echo "Label is not 'invite me to the community'. Exiting."
+            exit 0
+          fi
+
+      - name: Create Issue in Support Repository
+        if: steps.check_label.outputs.result == 'true'
+        id: create_issue
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = context.payload.issue;
+            const response = await github.rest.issues.create({
+              owner: 'Asymtode712',  
+              repo: 'support',       
+              title: issue.title,
+              body: issue.body,
+              labels: issue.labels.map(label => label.name),
+            });
+            return response.data.number;
+
+      - name: Wait for Issue to be Labeled
+        if: success()
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueNumber = steps.create_issue.outputs.number;
+            const response = await github.rest.issues.update({
+              owner: 'Asymtode712',
+              repo: 'support',
+              issue_number: issueNumber,
+              state: 'open',
+              labels: ['invite me to the community']
+            });
+            console.log(response.data);
