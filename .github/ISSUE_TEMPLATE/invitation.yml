@@ -1,7 +1,7 @@
 name: Invitation to the Recode-Hive GitHub Community Organization
 description: I would like to be part of this awesome community
 title: "Please invite me to the Recode-Hive GitHub Community Organization"
-labels: [invite me to the community]
+labels: ["invite me to the community"]
 body:
   - type: input
     id: name
