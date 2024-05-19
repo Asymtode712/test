@@ -21,7 +21,7 @@ jobs:
         id: create_issue
         uses: actions/github-script@v5
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           script: |
             const issue = context.payload.issue;
             const response = await github.rest.issues.create({
@@ -37,7 +37,7 @@ jobs:
         if: success()
         uses: actions/github-script@v5
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           script: |
             const issueNumber = steps.create_issue.outputs.number;
             const response = await github.rest.issues.update({
