@@ -19,15 +19,15 @@ jobs:
 
       - name: Create Issue in Support Repository
         id: create_issue
+        if: ${{ steps.check_label.outcome == 'success' }}
         uses: actions/github-script@v5
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           script: |
             const issue = context.payload.issue;
-            const { owner, repo } = context.repo;
             const response = await github.rest.issues.create({
-              owner: 'Asymtode712',  
-              repo: 'support',      
+              owner: 'Asymtode712', 
+              repo: 'support',    
               title: issue.title,
               body: issue.body,
               labels: ['invite me to the community'],
@@ -35,9 +35,10 @@ jobs:
             core.setOutput('issue_number', response.data.number);
 
       - name: Invite on Label
+        if: ${{ steps.check_label.outcome == 'success' }}
         uses: vj-abigo/invite-on-label@v1.2
         with:
-          organization: Asymtode712
+          organization: Recode-Hive
           label: invite me to the community
           repo-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           comment: |
