@@ -24,36 +24,21 @@ jobs:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           script: |
             const issue = context.payload.issue;
+            const { owner, repo } = context.repo;
             const response = await github.rest.issues.create({
-              owner: 'Recode-Hive',  // Owner of the support repository
-              repo: 'support',       // Name of the support repository
+              owner: 'Asymtode712',  
+              repo: 'support',      
               title: issue.title,
               body: issue.body,
-              labels: ['invite me to the organisation'],
+              labels: ['invite me to the community'],
             });
-            return { issue_number: response.data.number };
-
-      - name: Wait for Issue to be Labeled
-        if: success()
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          script: |
-            const issueNumber = steps.create_issue.outputs.number;
-            const response = await github.rest.issues.update({
-              owner: 'Asymtode712',
-              repo: 'support',
-              issue_number: issueNumber,
-              state: 'open',
-              labels: ['invite me to the community']
-            });
-            console.log(response.data);
+            core.setOutput('issue_number', response.data.number);
 
       - name: Invite on Label
         uses: vj-abigo/invite-on-label@v1.2
         with:
-          organization: Recode-Hive
-          label: invite me to the organisation
+          organization: Asymtode712
+          label: invite me to the community
           repo-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           comment: |
             <b>Invitation sent to join the GitHub Organisation. Welcome to the community 🎉</b><br><br>
