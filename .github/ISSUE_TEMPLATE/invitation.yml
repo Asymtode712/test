@@ -1,5 +1,10 @@
 name: Invitation to the Recode-Hive GitHub Community Organization
 body:
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      placeholder: Insert your name here
   - type: markdown
     attributes:
       value: |
